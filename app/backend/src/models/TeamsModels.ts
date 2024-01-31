@@ -9,4 +9,12 @@ export default class TeamModel {
 
     return dbTeams.map(({ id, teamName }) => ({ id, teamName })) as Iteam[];
   }
+
+  public async getTeamById(id:Iteam['id']):Promise<Iteam | null> {
+    const dbTeam = await this._model.findByPk(id);
+
+    if (dbTeam === null) return null;
+
+    return dbTeam.dataValues as Iteam;
+  }
 }
