@@ -9,7 +9,8 @@ import {
 import db from '.';
 
 export default class SequelizeTeam extends
-  Model<InferAttributes<SequelizeTeam>, InferCreationAttributes<SequelizeTeam>> {
+  Model<InferAttributes<SequelizeTeam>,
+  InferCreationAttributes<SequelizeTeam>> {
   declare id: CreateOptions<number>;
 
   declare teamName: string;
