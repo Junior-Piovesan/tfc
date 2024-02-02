@@ -17,7 +17,12 @@ export default class UserMiddleware {
 
     const { error } = loginSchema.validate(user);
 
-    if (error) return res.status(mapStatusHTTP('INVALID_DATA')).json({ message: error.message });
+    const status = error?.details[0].type === 'string.min'
+    || error?.details[0].type === 'string.email'
+      ? 'UNAUTHORIZED'
+      : 'INVALID_DATA';
+
+    if (error) return res.status(mapStatusHTTP(status)).json({ message: error.message });
 
     return next();
   }
@@ -61,14 +66,6 @@ export default class UserMiddleware {
         .json({ message: 'Token not found' });
     }
 
-    const bearerToken = authorization.split(' ');
-    const [bearer, token] = bearerToken;
-
-    if (bearer !== 'Bearer' || !token) {
-      return res
-        .status(mapStatusHTTP('UNAUTHORIZED'))
-        .json({ message: 'Bearer not found' });
-    }
     return next();
   }
 
