@@ -37,4 +37,17 @@ export default class UserMiddleware {
 
     return next();
   }
+
+  public async checkEmailIsValid(req:Request, res:Response, next:NextFunction) {
+    const user = req.body;
+
+    const dbUser = await this._model.findOne({ where: { email: user.email } }) as SequelizeUser;
+
+    if (!dbUser) {
+      return res
+        .status(mapStatusHTTP('UNAUTHORIZED'))
+        .json({ message: 'Invalid email or password' });
+    }
+    return next();
+  }
 }

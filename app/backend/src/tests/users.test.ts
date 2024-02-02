@@ -44,6 +44,17 @@ describe('Testando endpoint "/login"', function() {
     expect(response.body).to.be.deep.equal({ message: 'All fields must be filled' })
   })
 
+  it('Testando endpoint post "/login" se ao mandar a requisição com email inválido deve retornar uma mensagem de erro com status 401', async function() {
+    sinon.stub(SequelizeUser, 'findOne').resolves(null)
+
+    const response = await chai.request(app).post('/login').send({ ...validRequest })
+
+    
+    expect(response.status).to.be.equal(401)
+    expect(response.body).to.be.deep.equal({ message: 'Invalid email or password' })
+
+  })
+
   it('Testando endpoint post "/login" se ao mandar a requisição correta retorna um token válido com status 200', async function() {
      const buildUser = SequelizeUser.build(dbUser as any)
 

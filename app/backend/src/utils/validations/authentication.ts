@@ -20,5 +20,3 @@ export default class Authentication {
     return passwordIsCorrect;
   }
 }
-const result = bycript.hashSync('123456', 10);
-console.log(result);
