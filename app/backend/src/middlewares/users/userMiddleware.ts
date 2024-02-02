@@ -50,4 +50,15 @@ export default class UserMiddleware {
     }
     return next();
   }
+
+  static checkTokenExist(req:Request, res:Response, next:NextFunction) {
+    const { authorization } = req.headers;
+
+    if (!authorization) {
+      return res
+        .status(mapStatusHTTP('UNAUTHORIZED'))
+        .json({ message: 'Token not found' });
+    }
+    return next();
+  }
 }

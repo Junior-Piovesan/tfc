@@ -21,3 +21,10 @@ export const dbUser= {
 export const validToken = {
     token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoyLCJ1c2VybmFtZSI6IlVzZXIiLCJlbWFpbCI6InVzZXJAdXNlci5jb20iLCJyb2xlIjoidXNlciJ9LCJpYXQiOjE3MDY4MTc4NzZ9.aMeazUvbrpxRwbiq-li-E3GFb2zCREhP3mMw-acjMjo"
   }
+
+  export const invalidToken = {
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoyLCJ1c2VybmFtZSI6IlVzZXIiLCJlbWFpbCI6InVzZXJAdXNlci5jb20iLCJyb2xlIjoidXNlciJ9LCJpYXQiOjE3MDY4MTc4NzZ9.aMeazUvbrpxRwbiq-"
+  }
+
+export const validHeaderRequest = { authorization: `Bearer ${ validToken.token }` }
+export const invalidHeaderRequest = { authorization: `Bearer ${ invalidToken.token }` }

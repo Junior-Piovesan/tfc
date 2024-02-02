@@ -17,4 +17,8 @@ export default class UserService {
 
     return { status: 'SUCCESSFUL', data: { token } };
   }
+
+  // public async getUserType():promise<UserType> {
+  //   return { role: 'xablau' };
+  // }
 }

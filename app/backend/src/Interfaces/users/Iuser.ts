@@ -12,3 +12,5 @@ export type LoginInfo = {
 };
 
 export type TokenType = { token:string };
+
+export type UserType = { role:string };
