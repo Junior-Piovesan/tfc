@@ -18,58 +18,69 @@ const { expect } = chai
 
 describe('Testando endpoint "/login"', function() {
 
-  afterEach(() => {
-    sinon.restore()
-  })
+  describe('Verificando dados vindo da requisição',function() {
 
-  it('Testando endpoint post "/login" se ao mandar a requisição falta o campo email deve retornar uma mensagem de erro com status 400', async function() {
-    sinon.stub(SequelizeUser, 'findOne').resolves(null)
+    beforeEach(() => sinon.stub(SequelizeUser, 'findOne').resolves(null) )
 
-    const response = await chai.request(app).post('/login').send({...validPassword})
+    afterEach(() => sinon.restore() )
 
-    
-    expect(response.status).to.be.equal(400)
-    expect(response.body).to.be.deep.equal({ message: 'All fields must be filled' })
-
-  })
-
-  it('Testando endpoint post "/login" se ao mandar a requisição falta o campo password deve retornar uma mensagem de erro com status 400', async function() {
-
-    sinon.stub(SequelizeUser, 'findOne').resolves(null)
-
-    const response = await chai.request(app).post('/login').send({...validEmail})
-
-    
-    expect(response.status).to.be.equal(400)
-    expect(response.body).to.be.deep.equal({ message: 'All fields must be filled' })
-  })
-
-  it('Testando endpoint post "/login" se ao mandar a requisição com email inválido deve retornar uma mensagem de erro com status 401', async function() {
-    sinon.stub(SequelizeUser, 'findOne').resolves(null)
-
-    const response = await chai.request(app).post('/login').send({ ...validRequest })
-
-    
-    expect(response.status).to.be.equal(401)
-    expect(response.body).to.be.deep.equal({ message: 'Invalid email or password' })
-
-  })
-
-  it('Testando endpoint post "/login" se ao mandar a requisição correta retorna um token válido com status 200', async function() {
-     const buildUser = SequelizeUser.build(dbUser as any)
-
-    sinon.stub(SequelizeUser,'findOne').resolves(buildUser)
-
-    sinon.stub(Authentication,'createToken').returns(validToken.token)
-
-    const response = await chai
-    .request(app).post('/login')
+      it('Testando endpoint post "/login" se ao mandar a requisição falta o campo email deve retornar uma mensagem de erro com status 400', async function() {
       
-    .send({...validRequest})
 
+        const response = await chai.request(app).post('/login').send({...validPassword})
 
+        
+        expect(response.status).to.be.equal(400)
+        expect(response.body).to.be.deep.equal({ message: 'All fields must be filled' })
 
-      expect(response.status).to.be.equal(200)
-      expect(response.body).to.be.deep.equal(validToken)
+    })
+
+      it('Testando endpoint post "/login" se ao mandar a requisição falta o campo password deve retornar uma mensagem de erro com status 400', async function() {
+
+      // sinon.stub(SequelizeUser, 'findOne').resolves(null)
+
+        const response = await chai.request(app).post('/login').send({...validEmail})
+
+        
+        expect(response.status).to.be.equal(400)
+        expect(response.body).to.be.deep.equal({ message: 'All fields must be filled' })
+    })
+
+      it('Testando endpoint post "/login" se ao mandar a requisição com email inválido deve retornar uma mensagem de erro com status 401', async function() {
+        // sinon.stub(SequelizeUser, 'findOne').resolves(null)
+
+        const response = await chai.request(app).post('/login').send({ ...validRequest })
+
+        
+        expect(response.status).to.be.equal(401)
+        expect(response.body).to.be.deep.equal({ message: 'Invalid email or password' })
+
+    })
+
   })
+
+describe('Verificando em caso de todos os dados estarem corretos',function() {
+  
+  beforeEach(() => {
+    const buildUser = SequelizeUser.build(dbUser as any)
+  
+    sinon.stub(SequelizeUser,'findOne').resolves(buildUser)
+    
+    sinon.stub(Authentication,'createToken').returns(validToken.token)
+  } )
+
+  afterEach(() => sinon.restore() )
+
+      it('Testando endpoint post "/login" se ao mandar a requisição correta retorna um token válido com status 200', async function() {
+
+        const response = await chai
+        .request(app).post('/login')
+          .send({...validRequest})
+
+          expect(response.status).to.be.equal(200)
+          expect(response.body).to.be.deep.equal(validToken)
+    })
+
+})
+
 })
