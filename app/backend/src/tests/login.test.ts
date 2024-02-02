@@ -77,8 +77,8 @@ describe('Testando endpoint "/login"', function() {
           .request(app).post('/login')
             .send({...validRequest})
 
-            expect(response.status).to.be.equal(200)
-            expect(response.body).to.be.deep.equal(validToken)
+          expect(response.status).to.be.equal(200)
+          expect(response.body).to.be.deep.equal(validToken)
       })
 
   })
@@ -98,8 +98,7 @@ describe('Testando endpoint "/login/role"',function() {
 
   it('Verifica se o token informado está incorreto deve retornar um status 401 e uma mensagem de token inválido',async function() {
       const response = await chai
-      .request(app).get('/login/role')
-        .send( { ...invalidHeaderRequest } )
+      .request(app).get('/login/role').set( {...invalidHeaderRequest}  )
 
       expect(response.status).to.be.equal(401)
       expect(response.body).to.be.deep.equal({ "message": "Token must be a valid token" })
@@ -111,7 +110,7 @@ describe('Testando endpoint "/login/role"',function() {
 
       sinon.stub(SequelizeUser,'findOne').resolves(buildUser)
 
-      const response = await chai.request(app).get('/login/role').send( { ...validHeaderRequest } )
+      const response = await chai.request(app).get('/login/role').set( { ...validHeaderRequest } )
 
       expect(response.status).to.be.equal(200)
       expect(response.body).to.be.deep.equal( { role:dbUser.role } )

@@ -29,13 +29,15 @@ router.post(
 
 router.get(
   '/role',
-  // (req:Request, res:Response, next:NextFunction) => {
-  //   res.status(200).json({ message: 'oi' });
-  // },
   (req:Request, res:Response, next:NextFunction) => {
     UserMiddleware.checkTokenExist(req, res, next);
   },
-
+  (req:Request, res:Response, next:NextFunction) => {
+    UserMiddleware.checkTokenIsValid(req, res, next);
+  },
+  (req:Request, res:Response) => {
+    UserController.getUserRole(req, res);
+  },
 );
 
 export default router;

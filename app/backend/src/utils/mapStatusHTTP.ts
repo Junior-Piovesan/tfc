@@ -1,4 +1,11 @@
-export default function mapStatusHTTP(status:string) {
+type StatusType =
+'SUCCESSFUL' |
+'INVALID_DATA' |
+'NOT_FOUND' |
+'CONFLICT' |
+'UNAUTHORIZED';
+
+export default function mapStatusHTTP(status: StatusType) {
   switch (status) {
     case 'SUCCESSFUL': return 200;
     case 'INVALID_DATA': return 400;

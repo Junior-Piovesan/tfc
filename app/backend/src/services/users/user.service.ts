@@ -1,4 +1,4 @@
-import { Iuser, LoginInfo, TokenType } from '../../Interfaces/users/Iuser';
+import { Iuser, LoginInfo, TokenType, UserType } from '../../Interfaces/users/Iuser';
 import { ServiceResponseSuccess } from '../../Interfaces/ServiceResponse';
 
 import UserModel from '../../models/UsersModel';
@@ -18,7 +18,7 @@ export default class UserService {
     return { status: 'SUCCESSFUL', data: { token } };
   }
 
-  // public async getUserType():promise<UserType> {
-  //   return { role: 'xablau' };
-  // }
+  static getUserRole(user:Iuser):ServiceResponseSuccess<UserType> {
+    return { status: 'SUCCESSFUL', data: { role: user.role } };
+  }
 }
