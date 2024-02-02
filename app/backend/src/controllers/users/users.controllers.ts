@@ -11,6 +11,7 @@ export default class UserController {
 
   public async userLogin(req:Request, res:Response) {
     const user = req.body;
+
     const { status, data } = await this._userService.userLogin(user);
 
     res.status(mapStatusHTTP(status)).json(data);

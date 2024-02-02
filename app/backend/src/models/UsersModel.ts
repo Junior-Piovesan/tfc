@@ -6,9 +6,7 @@ export default class UserModel {
   private _model = SequelizeUser;
 
   public async userLogin(user:LoginInfo):Promise<Iuser | null> {
-    const { email } = user;
-
-    const dbUser = await this._model.findOne({ where: { email } });
+    const dbUser = await this._model.findOne({ where: { email: user.email } });
 
     if (!dbUser) return null;
 
