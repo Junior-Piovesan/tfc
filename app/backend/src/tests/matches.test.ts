@@ -20,14 +20,14 @@ describe('Testando endpoint "/matches"', function() {
 
     it('Verifica se ao fazer requisição para o enpoint GET "/matches" deve retornar uma lista de partidas', async function() {
 
-      const buildMatchesList = SequelizeMatches.bulkBuild(matchesListMock as any)
-
-      sinon.stub(SequelizeMatches, 'findAll').resolves(buildMatchesList)
+      sinon.stub(SequelizeMatches, 'findAll').resolves(matchesListMock as unknown as SequelizeMatches[])
 
       const response = await chai.request(app).get('/matches')
 
+      console.log(response.body)
+
       expect(response.status).to.be.equal(200)
-      expect(response.body).to.be.deep.equal(buildMatchesList)
+      expect(response.body).to.be.deep.equal(matchesListMock)
 
     })
   })
