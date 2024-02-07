@@ -18,13 +18,24 @@ export default class MatchesService {
 
     if (inProgress) {
       const matchesList = await this._matchesModel.getMatchesListByQuery(isInProgress);
-      console.log('inProgress');
+
       return { status: 'SUCCESSFUL', data: matchesList };
     }
 
     const matchesList = await this._matchesModel.getAllMatches();
-    console.log('não tem inProgress');
 
     return { status: 'SUCCESSFUL', data: matchesList };
+  }
+
+  public async editMatchesStatus(req:Request):Promise<ServiceResponseSuccess<{ message:string }>> {
+    const { id } = req.params;
+
+    const finishMatches = await this._matchesModel.editMatchesStatus(Number(id));
+
+    if (finishMatches[0] === 1) {
+      return { status: 'SUCCESSFUL', data: { message: 'Finished' } };
+    }
+
+    return { status: 'SUCCESSFUL', data: { message: '' } };
   }
 }

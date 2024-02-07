@@ -16,4 +16,10 @@ export default class MatchesController {
 
     return res.status(mapStatusHTTP(status)).json(data);
   }
+
+  public async editMatchesStatus(req:Request, res:Response) {
+    const { status, data } = await this._matchesService.editMatchesStatus(req);
+
+    return res.status(mapStatusHTTP(status)).json(data);
+  }
 }

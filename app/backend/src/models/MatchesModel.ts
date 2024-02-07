@@ -28,4 +28,13 @@ export default class MatchesModel {
 
     return dbMatchesList;
   }
+
+  public async editMatchesStatus(id:number, inProgress = false) {
+    const finishMatches = await this._model
+      .update({ inProgress }, { where: { id } });
+
+    console.log(finishMatches);
+
+    return finishMatches;
+  }
 }
