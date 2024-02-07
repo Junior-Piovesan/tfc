@@ -7,6 +7,7 @@ const chaiHttp = require('chai-http');
 
 import { app } from '../app';
 import { matchesInProgress, matchesListMock, matchesNotInProgress } from './mocks/matches/matches.mock';
+import { invalidHeaderRequest, validHeaderRequest } from './mocks/users/users.mocks';
 
 const { expect } = chai;
 
@@ -52,5 +53,35 @@ describe('Testando endpoint "/matches"', function() {
     })
 
   })
+
+  describe('Testando endpoint patch "/matches/:id/finish"',function() {
+    
+    afterEach(() => sinon.restore())
+  })
+
+  it('Testando endpoint patch "/matches/:id/finish" caso não seja passado um token deve retornar um status 401 e uma mensagem de erro', async function() {
+
+      const response = await chai.request(app).patch('/matches/46/finish')
+
+      expect(response.status).to.be.equal(401)
+      expect(response.body).to.be.deep.equal({ message: "Token not found" })
+  })
+
+  it('Testando endpoint patch "/matches/:id/finish" caso seja passado um token inválido deve retornar um status 401 e uma mensagem de erro', async function() {
+
+    const response = await chai.request(app).patch('/matches/46/finish').set({...invalidHeaderRequest})
+
+    expect(response.status).to.be.equal(401)
+    expect(response.body).to.be.deep.equal({ message: "Token must be a valid token" })
+})
+
+it('Testando endpoint patch "/matches/:id/finish" caso seja passado um token válido deve retornar um status 200 e uma mensagem de partida finalizada', async function() {
+  sinon.stub(SequelizeMatches, 'update').resolves([1])
+  
+  const response = await chai.request(app).patch('/matches/46/finish').set({...validHeaderRequest})
+
+  expect(response.status).to.be.equal(200)
+  expect(response.body).to.be.deep.equal({ message: "Finished" })
+})
 
 })
