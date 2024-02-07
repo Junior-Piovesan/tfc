@@ -22,4 +22,10 @@ export default class MatchesModel {
 
     return dbMatchesList;
   }
+
+  public async getMatchesListByQuery(inProgress: boolean):Promise<SequelizeMatches[]> {
+    const dbMatchesList = await this._model.findAll({ ...includeTable, where: { inProgress } });
+
+    return dbMatchesList;
+  }
 }

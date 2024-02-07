@@ -11,8 +11,8 @@ export default class MatchesController {
     this._matchesService = matchesService;
   }
 
-  public async getAllMatches(_req:Request, res:Response) {
-    const { status, data } = await this._matchesService.getAllMatches();
+  public async getAllMatches(req:Request, res:Response) {
+    const { status, data } = await this._matchesService.getAllMatches(req);
 
     return res.status(mapStatusHTTP(status)).json(data);
   }
