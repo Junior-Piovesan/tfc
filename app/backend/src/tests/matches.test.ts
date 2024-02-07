@@ -6,7 +6,7 @@ import SequelizeMatches from '../database/models/SequelizeMatches'
 const chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import { matchesListMock } from './mocks/matches/matches.mock';
+import { matchesInProgress, matchesListMock, matchesNotInProgress } from './mocks/matches/matches.mock';
 
 const { expect } = chai;
 
@@ -24,11 +24,33 @@ describe('Testando endpoint "/matches"', function() {
 
       const response = await chai.request(app).get('/matches')
 
-      console.log(response.body)
-
       expect(response.status).to.be.equal(200)
       expect(response.body).to.be.deep.equal(matchesListMock)
 
     })
+
+    it('Verifica se ao fazer requisição para o enpoint GET "/matches?inProgress=true" deve retornar uma lista de partidas que estão em andamento', async function() {
+
+      sinon.stub(SequelizeMatches, 'findAll').resolves(matchesInProgress as unknown as SequelizeMatches[])
+
+      const response = await chai.request(app).get('/matches?inProgress=true')
+
+      expect(response.status).to.be.equal(200)
+      expect(response.body).to.be.deep.equal(matchesInProgress)
+
+    })
+
+    it('Verifica se ao fazer requisição para o enpoint GET "/matches?inProgress=false" deve retornar uma lista de partidas que não estão em andamento', async function() {
+
+      sinon.stub(SequelizeMatches, 'findAll').resolves(matchesNotInProgress as unknown as SequelizeMatches[])
+
+      const response = await chai.request(app).get('/matches?inProgress=false')
+
+      expect(response.status).to.be.equal(200)
+      expect(response.body).to.be.deep.equal(matchesNotInProgress)
+
+    })
+
   })
+
 })
