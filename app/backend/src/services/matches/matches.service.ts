@@ -38,4 +38,13 @@ export default class MatchesService {
 
     return { status: 'SUCCESSFUL', data: { message: '' } };
   }
+
+  public async updateMatcheGoals(req:Request):Promise<ServiceResponseSuccess<any>> {
+    const goals = req.body;
+    const { id } = req.params;
+
+    const updateGoals = await this._matchesModel.updateMatcheGoals(goals, Number(id));
+
+    return { status: 'SUCCESSFUL', data: updateGoals };
+  }
 }

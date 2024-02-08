@@ -22,4 +22,10 @@ export default class MatchesController {
 
     return res.status(mapStatusHTTP(status)).json(data);
   }
+
+  public async updateMatcheGoals(req:Request, res:Response) {
+    const { status } = await this._matchesService.updateMatcheGoals(req);
+
+    return res.status(mapStatusHTTP(status)).end();
+  }
 }

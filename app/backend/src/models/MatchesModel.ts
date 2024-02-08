@@ -1,6 +1,8 @@
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import SequelizeMatches from '../database/models/SequelizeMatches';
 
+import { TeamsGoalsReq } from '../Interfaces/matches/Imatches';
+
 const includeTable = { include: [
   { model: SequelizeTeam,
     as: 'homeTeam',
@@ -36,5 +38,19 @@ export default class MatchesModel {
     console.log(finishMatches);
 
     return finishMatches;
+  }
+
+  public async updateMatcheGoals(goals: TeamsGoalsReq, id: number) {
+    const [[updateMatchGoals]] = await Promise.all([goals].map(async (goal) => {
+      const updateGoals = await this._model
+        .update({
+          homeTeamGoals: goal.homeTeamGoals,
+          awayTeamGoals: goal.awayTeamGoals,
+        }, { where: { id } });
+
+      return updateGoals;
+    }));
+
+    return updateMatchGoals;
   }
 }

@@ -22,11 +22,12 @@ router.patch(
   (req:Request, res:Response) => matchesController.editMatchesStatus(req, res),
 );
 
-router.use(
+router.patch(
   '/:id',
   (req:Request, res:Response, next:NextFunction) => UserMiddleware.checkTokenExist(req, res, next),
   (req:Request, res:Response, next:NextFunction) => UserMiddleware
     .checkTokenIsValid(req, res, next),
+  (req:Request, res:Response) => matchesController.updateMatcheGoals(req, res),
 );
 
 export default router;

@@ -22,3 +22,6 @@ export type MatchesResponse = {
   }
 
 };
+
+export type TeamsGoalsReq = { homeTeamGoals:number,
+  awayTeamGoals: number };
