@@ -1,5 +1,4 @@
 import { Request } from 'express';
-import { NewMatche } from '../../Interfaces/matches/Imatches';
 import SequelizeMatches from '../../database/models/SequelizeMatches';
 import MatchesModel from '../../models/MatchesModel';
 
