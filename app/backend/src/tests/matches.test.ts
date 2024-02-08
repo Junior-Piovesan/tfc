@@ -116,6 +116,7 @@ describe('Testando endpoint "/matches"', function() {
         .set({ ...validHeaderRequest })
 
       expect(response.status).to.be.equal(200)
+      expect(response.body).to.be.deep.equal({ message: 'Updated goals' })
 
     })
 
