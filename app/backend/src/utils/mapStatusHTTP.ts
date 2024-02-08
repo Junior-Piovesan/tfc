@@ -4,7 +4,8 @@ type StatusType =
 'INVALID_DATA' |
 'NOT_FOUND' |
 'CONFLICT' |
-'UNAUTHORIZED';
+'UNAUTHORIZED' |
+'UNPROCESSABLE_CONTENT';
 
 export default function mapStatusHTTP(status: StatusType) {
   switch (status) {
@@ -14,6 +15,7 @@ export default function mapStatusHTTP(status: StatusType) {
     case 'NOT_FOUND': return 404;
     case 'CONFLICT': return 409;
     case 'UNAUTHORIZED': return 401;
+    case 'UNPROCESSABLE_CONTENT': return 422;
     default: return 500;
   }
 }

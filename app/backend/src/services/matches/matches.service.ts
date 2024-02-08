@@ -2,7 +2,7 @@ import { Request } from 'express';
 import SequelizeMatches from '../../database/models/SequelizeMatches';
 import MatchesModel from '../../models/MatchesModel';
 
-import { ServiceResponseSuccess } from '../../Interfaces/ServiceResponse';
+import { ServiceResponse, ServiceResponseSuccess } from '../../Interfaces/ServiceResponse';
 
 export default class MatchesService {
   private _matchesModel: MatchesModel;
@@ -48,8 +48,24 @@ export default class MatchesService {
     return { status: 'SUCCESSFUL', data: updateGoals };
   }
 
-  public async createMatche(req:Request):Promise<ServiceResponseSuccess<SequelizeMatches>> {
+  public async createMatche(req:Request):Promise<ServiceResponse<SequelizeMatches>> {
     const newMetcheRequest = req.body;
+
+    const homeTeam = await SequelizeMatches
+      .findByPk(Number(newMetcheRequest.homeTeamId));
+
+    const awayTeam = await SequelizeMatches
+      .findByPk(Number(newMetcheRequest.awayTeamId));
+
+    console.log(homeTeam);
+    console.log(awayTeam);
+
+    if (!homeTeam || !awayTeam) {
+      return {
+        status: 'NOT_FOUND',
+        data: { message: 'There is no team with such id!' },
+      };
+    }
 
     const newMatche = await this._matchesModel.createMatche(newMetcheRequest);
 
