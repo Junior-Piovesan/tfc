@@ -3,6 +3,8 @@ import SequelizeMatches from '../database/models/SequelizeMatches';
 
 import { TeamsGoalsReq } from '../Interfaces/matches/Imatches';
 
+import sequelize from '../database/models';
+
 const includeTable = { include: [
   { model: SequelizeTeam,
     as: 'homeTeam',
@@ -40,17 +42,35 @@ export default class MatchesModel {
     return finishMatches;
   }
 
-  public async updateMatcheGoals(goals: TeamsGoalsReq, id: number) {
-    const [[updateMatchGoals]] = await Promise.all([goals].map(async (goal) => {
-      const updateGoals = await this._model
-        .update({
-          homeTeamGoals: goal.homeTeamGoals,
-          awayTeamGoals: goal.awayTeamGoals,
-        }, { where: { id } });
+  public async updateMatcheGoals(goals: TeamsGoalsReq, id: number):Promise<number> {
+    const t = await sequelize.transaction();
+    try {
+      const [[updateMatchGoals]] = await Promise.all([goals].map(async (goal) => {
+        const updateGoals = await this._model
+          .update({
+            homeTeamGoals: goal.homeTeamGoals,
+            awayTeamGoals: goal.awayTeamGoals,
+          }, { where: { id }, transaction: t });
 
-      return updateGoals;
-    }));
+        await t.commit();
 
-    return updateMatchGoals;
+        return updateGoals;
+      }));
+
+      return updateMatchGoals;
+    } catch (error) {
+      await t.rollback();
+      throw new Error('Error when updating match goals');
+    }
+  }
+
+  public async createMatche(metcheRequest:SequelizeMatches):Promise<SequelizeMatches> {
+    const newMatche = await this._model
+      .create({
+        ...metcheRequest,
+        inProgress: true,
+      });
+
+    return newMatche;
   }
 }

@@ -159,3 +159,18 @@ export const matchesNotInProgress = [
 		}
 	}
 ];
+
+export const newMatcheRequestMock = {
+  "homeTeamId": 16,
+  "homeTeamGoals": 2,
+  "awayTeamGoals": 2
+}
+
+export const newMatcheMock = {
+  "id": 1,
+  "homeTeamId": 16,
+  "homeTeamGoals": 2,
+  "awayTeamId": 8,
+  "awayTeamGoals": 2,
+  "inProgress": true
+}

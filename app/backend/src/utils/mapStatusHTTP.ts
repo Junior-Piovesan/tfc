@@ -1,5 +1,6 @@
 type StatusType =
 'SUCCESSFUL' |
+'CREATED' |
 'INVALID_DATA' |
 'NOT_FOUND' |
 'CONFLICT' |
@@ -8,6 +9,7 @@ type StatusType =
 export default function mapStatusHTTP(status: StatusType) {
   switch (status) {
     case 'SUCCESSFUL': return 200;
+    case 'CREATED': return 201;
     case 'INVALID_DATA': return 400;
     case 'NOT_FOUND': return 404;
     case 'CONFLICT': return 409;

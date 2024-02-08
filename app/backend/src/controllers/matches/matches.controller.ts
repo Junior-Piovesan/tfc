@@ -28,4 +28,10 @@ export default class MatchesController {
 
     return res.status(mapStatusHTTP(status)).json({ message: 'Updated goals' });
   }
+
+  public async createMatche(req:Request, res:Response) {
+    const { status, data } = await this._matchesService.createMatche(req);
+
+    return res.status(mapStatusHTTP(status)).json(data);
+  }
 }

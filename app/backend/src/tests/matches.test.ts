@@ -6,8 +6,19 @@ import SequelizeMatches from '../database/models/SequelizeMatches'
 const chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import { matchesInProgress, matchesListMock, matchesNotInProgress } from './mocks/matches/matches.mock';
-import { invalidHeaderRequest, validHeaderRequest } from './mocks/users/users.mocks';
+
+import { 
+  matchesInProgress,
+  matchesListMock,
+  matchesNotInProgress,
+  newMatcheMock,
+  newMatcheRequestMock
+} from './mocks/matches/matches.mock';
+
+import {
+   invalidHeaderRequest,
+    validHeaderRequest
+} from './mocks/users/users.mocks';
 
 const { expect } = chai;
 
@@ -118,6 +129,41 @@ describe('Testando endpoint "/matches"', function() {
       expect(response.status).to.be.equal(200)
       expect(response.body).to.be.deep.equal({ message: 'Updated goals' })
 
+    })
+
+
+  })
+
+  describe('Testando endpoint post "/matches"', function() {
+    
+    afterEach(() => sinon.restore())
+
+    it('Testando endpoint post "/matches" caso não seja passado um token deve retornar um status 401 e uma mensagem de erro', async function() {
+
+      const response = await chai.request(app).post('/matches')
+
+      expect(response.status).to.be.equal(401)
+      expect(response.body).to.be.deep.equal({ message: "Token not found" })
+    })
+
+    it('Testando endpoint post "/matches" caso seja passado um token inválido deve retornar um status 401 e uma mensagem de erro', async function() {
+
+      const response = await chai.request(app).post('/matches')
+        .set({...invalidHeaderRequest})
+
+      expect(response.status).to.be.equal(401)
+      expect(response.body).to.be.deep.equal({ message: "Token must be a valid token" })
+    })
+
+    it('Testando endpoint post "/matches" caso seja passado um token válido deve retornar um status 200 e a partida criada no banco de dados', async function() {
+
+      sinon.stub(SequelizeMatches,'create').resolves(newMatcheMock as unknown as SequelizeMatches)
+
+      const response = await chai.request(app).post('/matches')
+        .set({...validHeaderRequest}).send(newMatcheRequestMock)
+
+      expect(response.status).to.be.equal(201)
+      expect(response.body).to.be.deep.equal(newMatcheMock)
     })
 
 

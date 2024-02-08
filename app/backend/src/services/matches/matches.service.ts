@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { NewMatche } from '../../Interfaces/matches/Imatches';
 import SequelizeMatches from '../../database/models/SequelizeMatches';
 import MatchesModel from '../../models/MatchesModel';
 
@@ -39,12 +40,20 @@ export default class MatchesService {
     return { status: 'SUCCESSFUL', data: { message: '' } };
   }
 
-  public async updateMatcheGoals(req:Request):Promise<ServiceResponseSuccess<any>> {
+  public async updateMatcheGoals(req:Request):Promise<ServiceResponseSuccess<number>> {
     const goals = req.body;
     const { id } = req.params;
 
     const updateGoals = await this._matchesModel.updateMatcheGoals(goals, Number(id));
 
     return { status: 'SUCCESSFUL', data: updateGoals };
+  }
+
+  public async createMatche(req:Request):Promise<ServiceResponseSuccess<SequelizeMatches>> {
+    const newMetcheRequest = req.body;
+
+    const newMatche = await this._matchesModel.createMatche(newMetcheRequest);
+
+    return { status: 'CREATED', data: newMatche };
   }
 }
