@@ -12,13 +12,15 @@ import {
   matchesListMock,
   matchesNotInProgress,
   newMatcheMock,
-  newMatcheRequestMock
+  newMatcheRequestMock,
+  newMatcheTeamsEqualRequestMock
 } from './mocks/matches/matches.mock';
 
 import {
    invalidHeaderRequest,
     validHeaderRequest
 } from './mocks/users/users.mocks';
+import { allTeams } from './mocks/Teams/teams.mocks';
 
 const { expect } = chai;
 
@@ -155,9 +157,25 @@ describe('Testando endpoint "/matches"', function() {
       expect(response.body).to.be.deep.equal({ message: "Token must be a valid token" })
     })
 
+    it('Testando endpoint post "/matches" caso seja passado um token válido e os times iguais deve retornar um status 422 e uma mensagem de erro ' , async function() {
+
+
+
+      const response = await chai.request(app).post('/matches')
+        .set({...validHeaderRequest}).send({...newMatcheTeamsEqualRequestMock})
+
+      expect(response.status).to.be.equal(422)
+      expect(response.body).to.be.deep.equal({ message: "It is not possible to create a match with two equal teams" })
+    })
+
     it('Testando endpoint post "/matches" caso seja passado um token válido deve retornar um status 200 e a partida criada no banco de dados', async function() {
 
       sinon.stub(SequelizeMatches,'create').resolves(newMatcheMock as unknown as SequelizeMatches)
+
+      sinon.stub(SequelizeMatches,'findByPk')
+      .resolves(allTeams[0] as unknown as SequelizeMatches)
+      .onSecondCall()
+      .resolves(allTeams[1]  as unknown as SequelizeMatches)
 
       const response = await chai.request(app).post('/matches')
         .set({...validHeaderRequest}).send(newMatcheRequestMock)

@@ -57,9 +57,6 @@ export default class MatchesService {
     const awayTeam = await SequelizeMatches
       .findByPk(Number(newMetcheRequest.awayTeamId));
 
-    console.log(homeTeam);
-    console.log(awayTeam);
-
     if (!homeTeam || !awayTeam) {
       return {
         status: 'NOT_FOUND',

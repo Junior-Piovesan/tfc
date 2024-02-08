@@ -162,6 +162,14 @@ export const matchesNotInProgress = [
 
 export const newMatcheRequestMock = {
   "homeTeamId": 16,
+  "awayTeamId": 8,
+  "homeTeamGoals": 2,
+  "awayTeamGoals": 2
+}
+
+export const newMatcheTeamsEqualRequestMock = {
+  "homeTeamId": 8,
+  "awayTeamId": 8,
   "homeTeamGoals": 2,
   "awayTeamGoals": 2
 }
