@@ -37,8 +37,6 @@ export default class MatchesModel {
     const finishMatches = await this._model
       .update({ inProgress }, { where: { id } });
 
-    console.log(finishMatches);
-
     return finishMatches;
   }
 
