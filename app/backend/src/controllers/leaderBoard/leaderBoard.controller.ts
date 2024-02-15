@@ -11,7 +11,7 @@ export default class LeaderBoardController {
   }
 
   public async getLeaderBoard(req:Request, res:Response) {
-    const { status, data } = await this._leaderBoardService.getLeaderBoard();
+    const { status, data } = await this._leaderBoardService.getLeaderBoard(req);
 
     return res.status(mapStatusHTTP(status)).json(data);
   }

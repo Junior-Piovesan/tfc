@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import GenerateTeamsInfo from '../../utils/generateTeamsInfo';
 
 import { ServiceResponse } from '../../Interfaces/ServiceResponse';
@@ -12,10 +13,12 @@ export default class LeaderBoardService {
     this._matchesModel = matchesModel;
   }
 
-  public async getLeaderBoard():Promise<ServiceResponse<TeamInfo[]>> {
+  public async getLeaderBoard(req:Request):Promise<ServiceResponse<TeamInfo[]>> {
+    const { path } = req;
     const dbAllMatches = await this._matchesModel.getAllMatches();
-
-    const listTeamsInfo = GenerateTeamsInfo.generateInfo(dbAllMatches as unknown as MatchesModel[]);
+    console.log(path);
+    const listTeamsInfo = GenerateTeamsInfo
+      .generateInfo(dbAllMatches as unknown as MatchesModel[], path);
 
     const listOrdened = listTeamsInfo.sort((a, b) => {
       if (a.totalPoints !== b.totalPoints) {
