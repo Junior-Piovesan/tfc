@@ -1,20 +1,11 @@
-import { NewMatche } from '../Interfaces/matches/Imatches';
-
-type TeamInfo = {
-  name:string,
-  totalPoints:number,
-  totalGames:number,
-  totalVictories:number,
-  totalDraws:number,
-  totalLosses:number,
-  goalsFavor:number,
-  goalsOwn:number,
-  goalsBalance:number,
-  efficiency:number
-};
+// import SequelizeMatches from '../database/models/SequelizeMatches';
+// import MatchesModel from '../models/MatchesModel';
+import { TeamInfo } from '../Interfaces/teams/Iteams';
+// import { NewMatche } from '../Interfaces/matches/Imatches';
+// import SequelizeMatches from '../database/models/SequelizeMatches';
 
 export default class GenerateTeamsInfo {
-  static generateInfo(matches: NewMatche[]):TeamInfo[] {
+  static generateInfo(matches: any[]):TeamInfo[] {
     const teamInfoList:TeamInfo[] = [];
 
     matches.forEach((team, index) => {
@@ -33,15 +24,23 @@ export default class GenerateTeamsInfo {
 
       teamInfoList.push(teamInfo);
     });
-    return teamInfoList;
+    return this.removeDuplicates(teamInfoList);
   }
 
-  static filterCurrentTeam(matches:NewMatche[], index:number):NewMatche[] {
+  static removeDuplicates(matches:TeamInfo[]):TeamInfo[] {
+    const uniqueTeams = matches
+      .filter((item, index, arr) => arr
+        .findIndex((t) => t.name === item.name) === index);
+
+    return uniqueTeams;
+  }
+
+  static filterCurrentTeam(matches:any[], index:number):any[] {
     return matches
       .filter((team) => team.homeTeam.teamName === matches[index].homeTeam.teamName);
   }
 
-  static sumTotalPoints(matches:NewMatche[], index:number):number {
+  static sumTotalPoints(matches:any[], index:number):number {
     const newMatchesList = this.filterCurrentTeam(matches, index);
 
     return newMatchesList.reduce((acc, curr) => {
@@ -58,9 +57,8 @@ export default class GenerateTeamsInfo {
     }, 0);
   }
 
-  static sumTotalMatches(matches:NewMatche[], index:number):number {
+  static sumTotalMatches(matches:any[], index:number):number {
     const matchesFinish = matches.filter(({ inProgress }) => !inProgress);
-
     const currentTeam = matches[index].homeTeam.teamName;
     let result = 0;
 
@@ -72,7 +70,7 @@ export default class GenerateTeamsInfo {
     return result;
   }
 
-  static sumTotalVictories(matches:NewMatche[], index:number):number {
+  static sumTotalVictories(matches:any[], index:number):number {
     const matchesFinish = matches.filter(({ inProgress }) => !inProgress);
 
     const currentTeam = matches[index].homeTeam.teamName;
@@ -87,7 +85,7 @@ export default class GenerateTeamsInfo {
     return result;
   }
 
-  static sumTotalDraws(matches:NewMatche[], index:number):number {
+  static sumTotalDraws(matches:any[], index:number):number {
     const matchesFinish = matches.filter(({ inProgress }) => !inProgress);
 
     const currentTeam = matches[index].homeTeam.teamName;
@@ -102,7 +100,7 @@ export default class GenerateTeamsInfo {
     return result;
   }
 
-  static sumTotalDefeats(matches:NewMatche[], index:number):number {
+  static sumTotalDefeats(matches:any[], index:number):number {
     const matchesFinish = matches.filter(({ inProgress }) => !inProgress);
 
     const currentTeam = matches[index].homeTeam.teamName;
@@ -117,7 +115,7 @@ export default class GenerateTeamsInfo {
     return result;
   }
 
-  static sumGoalFavor(matches:NewMatche[], index:number):number {
+  static sumGoalFavor(matches:any[], index:number):number {
     const matchesFinish = matches.filter(({ inProgress }) => !inProgress);
 
     const currentTeam = matches[index].homeTeam.teamName;
@@ -132,7 +130,7 @@ export default class GenerateTeamsInfo {
     return result;
   }
 
-  static sumGoalOwn(matches:NewMatche[], index:number):number {
+  static sumGoalOwn(matches:any[], index:number):number {
     const matchesFinish = matches.filter(({ inProgress }) => !inProgress);
 
     const currentTeam = matches[index].homeTeam.teamName;
@@ -147,7 +145,7 @@ export default class GenerateTeamsInfo {
     return result;
   }
 
-  static calcGoalsBalance(matches:NewMatche[], index:number):number {
+  static calcGoalsBalance(matches:any[], index:number):number {
     const goalsFavor = this.sumGoalFavor(matches, index);
 
     const goalsOwn = this.sumGoalOwn(matches, index);
@@ -155,7 +153,7 @@ export default class GenerateTeamsInfo {
     return goalsFavor - goalsOwn;
   }
 
-  static calcEfficiency(matches:NewMatche[], index:number):number {
+  static calcEfficiency(matches:any[], index:number):string {
     const totalPoints = Number(this.sumTotalPoints(matches, index));
     const totalMatches = Number(this.sumTotalMatches(matches, index));
 
@@ -163,6 +161,6 @@ export default class GenerateTeamsInfo {
 
     const result = (totalPoints / xablau) * 100;
 
-    return Number(result.toFixed(2));
+    return result.toFixed(2);
   }
 }

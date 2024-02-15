@@ -1,20 +1,9 @@
 import GenerateTeamsInfo from '../../utils/generateTeamsInfo';
 
 import { ServiceResponse } from '../../Interfaces/ServiceResponse';
-import { NewMatche } from '../../Interfaces/matches/Imatches';
 
 import MatchesModel from '../../models/MatchesModel';
-
-const xablau = (matches:any[]) => matches.map(({ dataValues }) => ({
-  id: dataValues.id,
-  homeTeamId: dataValues.homeTeamId,
-  homeTeamGoals: dataValues.homeTeamGoals,
-  awayTeamId: dataValues.awayTeamId,
-  awayTeamGoals: dataValues.awayTeamGoals,
-  inProgress: dataValues.inProgress,
-  homeTeam: dataValues.homeTeam.dataValues,
-  awayTeam: dataValues.awayTeam.dataValues,
-}) as unknown as NewMatche);
+import { TeamInfo } from '../../Interfaces/teams/Iteams';
 
 export default class LeaderBoardService {
   private _matchesModel: MatchesModel;
@@ -23,12 +12,24 @@ export default class LeaderBoardService {
     this._matchesModel = matchesModel;
   }
 
-  public async getLeaderBoard():Promise<ServiceResponse<any[]>> {
+  public async getLeaderBoard():Promise<ServiceResponse<TeamInfo[]>> {
     const dbAllMatches = await this._matchesModel.getAllMatches();
-    const newMatchesList = xablau(dbAllMatches);
 
-    const listTeamsInfo = GenerateTeamsInfo.generateInfo(newMatchesList);
+    const listTeamsInfo = GenerateTeamsInfo.generateInfo(dbAllMatches as unknown as MatchesModel[]);
 
-    return { status: 'SUCCESSFUL', data: listTeamsInfo };
+    const listOrdened = listTeamsInfo.sort((a, b) => {
+      if (a.totalPoints !== b.totalPoints) {
+        return b.totalPoints - a.totalPoints;
+      }
+      if (a.totalVictories !== b.totalVictories) {
+        return b.totalVictories - a.totalVictories;
+      }
+      if (a.goalsBalance !== b.goalsBalance) {
+        return b.goalsBalance - a.goalsBalance;
+      }
+      return b.goalsFavor - a.goalsFavor;
+    });
+
+    return { status: 'SUCCESSFUL', data: listOrdened };
   }
 }
