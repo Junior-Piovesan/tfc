@@ -205,4 +205,37 @@ export default class GenerateTeamsInfo {
 
     return result.toFixed(2);
   }
+
+  static calcEfficiencyGeralTeam(homeTeam:TeamInfo, awayTeam:TeamInfo) {
+    const totalPoints = homeTeam.totalPoints + awayTeam.totalPoints;
+    const multiplication = (homeTeam.totalGames + awayTeam.totalGames) * 3;
+
+    const result = (totalPoints / multiplication) * 100;
+
+    return result.toFixed(2);
+  }
+
+  static geralTeamsInfo(homeInfo:TeamInfo[], awayInfo:TeamInfo[]):TeamInfo[] {
+    const geralInfoList:TeamInfo[] = [];
+
+    homeInfo.forEach((homeTeam) => {
+      const currentTeam = awayInfo.find((awayTeam) => awayTeam.name === homeTeam.name) as TeamInfo;
+
+      const infoTeam = {
+        name: homeTeam.name,
+        totalPoints: homeTeam.totalPoints + currentTeam.totalPoints,
+        totalGames: homeTeam.totalGames + currentTeam.totalGames,
+        totalVictories: homeTeam.totalVictories + currentTeam.totalVictories,
+        totalDraws: homeTeam.totalDraws + currentTeam.totalDraws,
+        totalLosses: homeTeam.totalLosses + currentTeam.totalLosses,
+        goalsFavor: homeTeam.goalsFavor + currentTeam.goalsFavor,
+        goalsOwn: homeTeam.goalsOwn + currentTeam.goalsOwn,
+        goalsBalance: homeTeam.goalsBalance + currentTeam.goalsBalance,
+        efficiency: this.calcEfficiencyGeralTeam(homeTeam, currentTeam),
+      };
+
+      geralInfoList.push(infoTeam);
+    });
+    return geralInfoList;
+  }
 }

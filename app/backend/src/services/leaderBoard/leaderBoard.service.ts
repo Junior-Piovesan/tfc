@@ -1,4 +1,6 @@
 import { Request } from 'express';
+
+import sortListTeamInfo from '../../utils/sortListTeamInfo';
 import GenerateTeamsInfo from '../../utils/generateTeamsInfo';
 
 import { ServiceResponse } from '../../Interfaces/ServiceResponse';
@@ -16,22 +18,22 @@ export default class LeaderBoardService {
   public async getLeaderBoard(req:Request):Promise<ServiceResponse<TeamInfo[]>> {
     const { path } = req;
     const dbAllMatches = await this._matchesModel.getAllMatches();
-    console.log(path);
+
+    if (path === '/') {
+      const homeInfo = GenerateTeamsInfo.generateInfo(dbAllMatches, '/home');
+      const awayInfo = GenerateTeamsInfo.generateInfo(dbAllMatches, '/away');
+
+      const listTeamGeralInfo = GenerateTeamsInfo.geralTeamsInfo(homeInfo, awayInfo);
+
+      const listOrdened = sortListTeamInfo(listTeamGeralInfo);
+
+      return { status: 'SUCCESSFUL', data: listOrdened };
+    }
+
     const listTeamsInfo = GenerateTeamsInfo
       .generateInfo(dbAllMatches as unknown as MatchesModel[], path);
 
-    const listOrdened = listTeamsInfo.sort((a, b) => {
-      if (a.totalPoints !== b.totalPoints) {
-        return b.totalPoints - a.totalPoints;
-      }
-      if (a.totalVictories !== b.totalVictories) {
-        return b.totalVictories - a.totalVictories;
-      }
-      if (a.goalsBalance !== b.goalsBalance) {
-        return b.goalsBalance - a.goalsBalance;
-      }
-      return b.goalsFavor - a.goalsFavor;
-    });
+    const listOrdened = sortListTeamInfo(listTeamsInfo);
 
     return { status: 'SUCCESSFUL', data: listOrdened };
   }
